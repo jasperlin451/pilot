@@ -1,8 +1,3 @@
-x=int(input("Please enter an integer: "))
-if x <0:
-	print("Negative changed to zero")
-elif x==0:
-	print ("0")
-else:
-	print (x)
-
+import excelImport
+a=excelImport.scan('/home/jasper/Downloads/data.xls')
+print(a)
