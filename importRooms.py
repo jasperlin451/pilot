@@ -9,5 +9,5 @@ def scan(name):
         temp=[]
         for curr_cell in range(num_cells):
             temp.append(sheet.cell_value(curr_row,curr_cell))
-        data.append(room.Room(temp[0],temp[1],temp[2]))
+        data.append(room.Room(temp[0]+' '+temp[1],temp[2]))
     return(data)
