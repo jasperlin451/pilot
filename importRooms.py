@@ -5,9 +5,9 @@ def scan(name):
     num_rows = sheet.nrows
     num_cells = sheet.ncols
     data = []
-    for curr_row in range(num_rows):
+    for curr_row in range(num_rows-1): #skip first line
         temp=[]
         for curr_cell in range(num_cells):
-            temp.append(sheet.cell_value(curr_row,curr_cell))
+            temp.append(sheet.cell_value(curr_row+1,curr_cell))
         data.append(room.Room(temp[0]+' '+temp[1],temp[2]))
     return(data)

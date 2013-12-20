@@ -19,8 +19,7 @@ def scan(name,subject):
                     avail.append(sheet.cell_value(curr_row,curr_cell)) 
                 else:		
                    temp1.append(sheet.cell_value(curr_row,curr_cell))
-            for a in range (len(temp1)):
-                student = person.Person(temp1[0],temp1[1],temp1[2],temp1[3],subject,temp1[4],avail) #assign all the values to person class
+            student = person.Person(temp1[0],temp1[1],temp1[2],temp1[3],subject,temp1[4],avail) #assign all the values to person class
             data.append(student) #add back to data
     return(data,times)
 #first row of column is data labels, most interested in the time slots
