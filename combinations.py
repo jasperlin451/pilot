@@ -11,7 +11,8 @@ def combinations(possibleTimes,numberofClasses,classData):
             combo.append(c)
     return(combo)
 
-#returns time slots and leader meeting days
+#returns time slots
+#work on also returning leader meeting days
 
 def checkStudents(data,combination,possibleTimes):
     temp=data
