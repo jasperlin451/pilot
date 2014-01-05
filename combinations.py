@@ -3,16 +3,16 @@
 #possibleTimes is scanned in from each subject as is numberofClasses
 import itertools
 
-def combinations(possibleTimes,numberofClasses,classData):
+def combinations(possibleTimes,numberofClasses,classData,roomCount):
     combo=[]
-    for c in itertools.combinations_with_replacement(possibleTimes,numberofClasses):
-        a=checkStudents(classData,c,possibleTimes)
-        if a==1:
-            combo.append(c)
+    for a in itertools.combinations_with_replacement(possibleTimes,numberofClasses):
+        b=checkStudents(classData,a,possibleTimes)
+        c=checkRooms(a,roomCount)
+        if b==1 and c==1:
+            combo.append(a)
     return(combo)
 
 #returns time slots
-#work on also returning leader meeting days
 
 def checkStudents(data,combination,possibleTimes):
     temp=data
@@ -30,3 +30,15 @@ def checkStudents(data,combination,possibleTimes):
         except(IndexError):
              return(0)
     return (1)
+
+#check to see if the combination is possible based on number of rooms available
+def checkRooms(combo,roomCount):
+    temp=set(combo)
+    comboTimes=list(temp)
+    comboRooms=[]
+    for b in comboTimes:
+        comboRooms.append(combo.count(b))
+    for i in range(len(comboTimes)): #check to see if combo rooms more than available rooms
+        if roomCount[1][roomCount[0].index(comboTimes[i])]<comboRooms[i]:
+            return(0)
+    return(1)

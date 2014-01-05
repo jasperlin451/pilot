@@ -10,4 +10,16 @@ def scan(name):
         for curr_cell in range(num_cells):
             temp.append(sheet.cell_value(curr_row+1,curr_cell))
         data.append(room.Room(temp[0]+' '+temp[1],temp[2]))
-    return(data)
+    roomCount=roomCounter(data)
+    return(data,roomCount)
+
+def roomCounter(data):
+    times=[]
+    roomCount=[]
+    for i in range(len(data)):
+        times.append(data[i].time)
+    temp=set(times)
+    uniqueTimes=list(temp)
+    for b in uniqueTimes:
+        roomCount.append(times.count(b))
+    return([uniqueTimes,roomCount])

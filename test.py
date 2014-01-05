@@ -1,11 +1,12 @@
 #import excel file, print data
 import studentImport
-a,b = studentImport.scan('/home/jasper/pilot/data.xls','Calc II')
-#for i in range(len(a)):
-#    print(a[i].avail)
-#print(' ')
+data,times = studentImport.scan('/home/jasper/pilot/data.xls','Calc II')
+
+import importRooms
+rooms,roomCount=importRooms.scan('/home/jasper/pilot/rooms.xlsx')
+
 import combinations
-combos=combinations.combinations(b,8,a)
+combos=combinations.combinations(times,8,data,roomCount)
 print(len(combos))
 f=open('output','r+')
 for e in range(len(combos)):
