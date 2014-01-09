@@ -1,23 +1,48 @@
-#take in student availabilities for a given subject
-#sort students into X number of groups, X is an input
-#optimal way to sort data into number of groups
-def Sorter(data,numberofgroups,times,roomList):
-    i=0 #increment i if there is no more people avail at the time slot
-    counter=0 #counter of number of groups made
-    while counter<numberofgroups: #keep sorting until number of groups is made
-        #check if there is an available room at the time
-        #if room is available, sort
-        isRoomavail,room,index=checkRoom(roomList,times[i])
-        if isRoomAvail==1:
-            temp=sorted(data, key=lambda student: student.avail[i])
-            #count number of 1 avail and #1 preference
-            #if number is greater than 8 make into a group
-        else:
-            i=i+1
-    return(roomList,waitlist,data)
+#timeCombinations is all the combos generated for each subject
+#subject is the list of subject with same index as timeCombinations
+#roomList should initially be empty list that is scanned from excel
+finalCombos=[]
+timeCombinations=[]
+subjects=[]
+def Sorter(timeCombinations,subject,roomList):
+    global timeCombos,subjects
+    timeCombos=timeCombinations
+    subjects=subject
+    recursiveSorter([],roomList,0)
+    return(finalCombos)
 
-def checkRoom(roomList,checkTime):
-    for a in range(len(roomList)):
-        if roomList[a].time==checkTime and roomList[a].available==1:
-            return (1,roomList[a].classroom,a)
-    return (0,'None',[])
+#take time combos for each subject and apply to roomList
+
+def recursiveSorter(filledRooms,remainRooms,index):
+    fill=[]
+    remain=[]
+    global timeCombos,subjects
+    for combo in timeCombos[index]:
+        #check if the combination works
+        temp1,temp2,temp3=checkCombination(filledRooms,remainRooms,combo,subjects[index])
+        if temp1==1:
+            fill.append(temp2)
+            remain.append(temp3)
+    for e,d in zip(fill,remain):   
+        if index==len(timeCombos)-1:
+           global finalCombos
+           finalCombos.append(e)
+        else:
+           recursiveSorter(e,d,index+1)
+
+def checkCombination(a,b,c,d):
+    fill=a[:]
+    remain=b[:]
+    for i in c:
+        temp=[]
+        for z in remain:
+            temp.append(z.time)
+        try:
+             v=temp.index(i)
+             remain[v].available=0
+             remain[v].subject=d
+             fill.append(remain[v])
+             remain.pop(v)
+        except (ValueError):
+             return(0,[],[])
+    return (1,fill,remain)
