@@ -6,13 +6,14 @@ finalCombo=[]
 timeCombinations=[]
 subjects=[]
 value=0
-def Sorter(data,timeCombinations,subject,roomList,classes):
-    global timeCombos,subjects,classData,subjectClasses
+def Sorter(data,timeCombinations,subject,classes,rooms):
+    global timeCombos,subjects,classData,subjectClasses,roomList
+    roomList=rooms
     timeCombos=timeCombinations
     subjects=subject
     classData=data
     subjectClasses=classes
-    recursiveSorter([],roomList,0)
+    recursiveSorter([],list(range(len(roomList))),0)
     return(finalCombo)
 
 #take time combos for each subject and apply to roomList
@@ -28,32 +29,37 @@ def recursiveSorter(filledRooms,remainRooms,index):
                #if value is greater than previous value, replace combination
               # global classData,subjects 
               # va=calculateValue(temp2,classData,subjects)
-               global value,finalCombo
-               finalCombo.append(temp2)
-              # if va>value
+               global value,finalCombo,roomList
+               temp=[]
+               for i in range(len(temp2)):
+                   temp.append(copy.deepcopy(roomList[temp2[i]]))
+                   temp[i].available=0 
+                   if i<8:
+                       temp[i].subject='Calc II'
+                   else:
+                       temp[i].subject='Chem I'
+               finalCombo.append(temp)
+               # if va>value
                #    finalCombos=temp2[:]
                 #   value=va
             else:
                recursiveSorter(temp2,temp3,index+1)
 
-def checkCombination(a,b,c,d):
-    
-    fill=copy.deepcopy(a)
-    remain=copy.deepcopy(b)
-    for i in c:
+def checkCombination(b,a,combination,subject):
+    remainRooms=a[:]
+    filledRooms=b[:]
+    for time in combination:
         temp=[]
-        for z in remain:
-            temp.append(z.time)
+        global roomList
+        for z in remainRooms:
+            temp.append(roomList[z].time)
         try:
-             v=temp.index(i)
-             #print(v,len(temp))
-             remain[v].available=0
-             remain[v].subject=d
-             fill.append(remain[v])
-             del remain[v]
+             v=temp.index(time)
+             filledRooms.append(remainRooms[v])
+             del remainRooms[v]
         except (ValueError):
              return(0,[],[])
-    return (1,fill,remain)
+    return (1,filledRooms,remainRooms)
 
 #calculate if the room combination is favorable
 #first preference=+3
