@@ -6,4 +6,4 @@ class Room:
         self.group=''
         self.leader=''
         self.subject=''
-
+        self.leaderMeeting=0
