@@ -19,25 +19,10 @@ class getInfo(tk.Frame):
         self.width = width
         self.grid()
         self.text = text
-        '''
-        entries = []
-        self.classOneVar = tk.StringVar()
-        self.classOne = tk.Label(self,textvariable=self.classOneVar)
-        self.classOne.grid(column=0,row=0,sticky='EW')
-        self.classOneVar.set(u"Class One Filename !")
-        
-        self.openFile = tk.Button(self, text='Open File', command=self.openFileFunc)'''
         self.file_opt = options = {}
         options['filetypes'] = [('all files','.*'), ('text files', '.txt')]
         options['initialdir'] = '.'
-        '''
-        self.openFile.grid(column = 1, row=0,sticky = 'EW')
-        
-        button = tk.Button(self, text=text, font=('Comic Sans MS', 10),
-                           command=lambda: self.callback())
-        button.grid(column=1, row = 1)
-        '''
-        
+
     def onView(self):
         self.entries = []
         y = 0
@@ -47,16 +32,10 @@ class getInfo(tk.Frame):
             disp = tk.Label(self, textvariable=var)
             disp.grid(column = 0, row = y)
             var.set("Class " + str(y) + " filename")
-            openFile = tk.Button(self, text = 'Open File', command=lambda: self.openFileFunc(var))
+            openFile = tk.Button(self, text = 'Open File', command=lambda var = var: self.openFileFunc(var))
             openFile.grid(column = 1, row = y)
             y += 1
             self.entries.append([num, var,disp, openFile])
-        '''y = 0
-        for x in range(0, self.number):
-            openFile = tk.Button(self, text = 'Open File', command=lambda: self.openFileFunc(y))
-            openFile.grid(column = 1, row = y)
-            self.entries[y].append(openFile)
-            y+=1'''
             
         button = tk.Button(self, text=self.text, font=('Comic Sans MS', 10),
                            command=lambda: self.callback())
