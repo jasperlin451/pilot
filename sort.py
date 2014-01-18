@@ -4,6 +4,7 @@
 import copy
 import itertools
 import collections
+import room
 
 finalCombo=[]
 timeCombinations=[]
@@ -27,42 +28,36 @@ def recursiveSorter(filledRooms,remainRooms,index):
         #check if the combination works
         temp1,filled,remain=checkCombination(filledRooms,remainRooms,combo,subjects[index])
         if temp1==1:
-            if index==len(timeCombos)-1:
-                split=subjectSplit(filled) 
-                #see if leaders meetings will fit
-                temp4,leaderCombos=checkLeaders(split,remain)
-                if temp4==1:
-                    for combination in leaderCombos:
-                        studentRooms=filled[:]
-                        for i in combination: #fill the leader meeting time slots
-                            studentRooms.append(i)
-                        #calculate value of particular room combination
-                        #if value is greater than previous value, replace combination
-                        # global classData,subjects 
-                        # va=calculateValue(temp2,classData,subjects)
-                        global value,finalCombo,roomList
-                        temp=[]
-                        if len(finalCombo)<3:
-                            for i in range(len(studentRooms)):
-                                temp.append(copy.deepcopy(roomList[studentRooms[i]]))
-                                temp[i].available=0 
-                                if i<8:
-                                    temp[i].subject='Calc II'
-                                elif(i<18):
-                                    temp[i].subject='Chem I'
-                                elif(i<19):
-                                    temp[i].subject='Calc II'
-                                    temp[i].leaderMeeting=1
-                                else:
-                                    temp[i].subject='Chem I'
-                                    temp[i].leaderMeeting=1
-                            finalCombo.append(temp)
-               # if va>value
-               #    finalCombos=temp2[:]
-                #   value=va
+            if index==len(timeCombos)-1: #if the last subject combination works
+                split=subjectSplit(filled) #split the rooms by subject 
+                #check to see if the value of new combination is greater than previous combination
+                global value, finalCombo
+                va,studentAssignments=checkCombinationValue(split)
+                if va>value: #the combination we found improves it 
+                    temp2,leaderCombos=checkLeaders(split,remain)
+                    if temp2==1: #if there are leader slots that fit into combination slot
+                        value=va
+                        finalCombo=[]
+                        #assign students to rooms
+                        #!!!!finalRoomList=assignStudents(studentAssignments)
+                        global subjects
+                        for leaderMeetingTimes in leaderCombos:
+                            for subLeader,subjectRoomList,sub in zip(leaderMeetingTimes,finalRoomList,subjects):
+                                #add the subLeader Room to the subjectRoomList
+                                global roomList
+                                subjectRoomList.append(room.Room(roomList[subLeader].time,roomList[subLeader].classroom)
+                                #last element of the list
+                                subjectRoomList[-1].subject=sub
+                                subjectRoomList[-1].leaderMeeting=1
+                            #finalRoomList is the list with students and leader meeting times
+                            finalCombo.append(copy.deepcopy(finalRoomList)) #potential to be very slow
+                            #delete the added rooms so that the process can be done again
+                            for delete in finalRoomList:
+                                del delete[-1]
             else:
                 recursiveSorter(filled,remain,index+1)
 
+#determine if a particular room combination works
 def checkCombination(b,a,combination,subject):
     remainRooms=a[:]
     filledRooms=b[:]
@@ -82,15 +77,15 @@ def checkCombination(b,a,combination,subject):
 #calculate if the room combination is favorable
 #first preference=+3
 #can make=+1
-def calculateValue(rooms,data,subject,numberofClasses):
-    #seperate into subjects
-    breakdown=[]
-    counter=0
-    for i in numberofClasses:
-        breakdown.append(rooms[counter:counter+i-1])
-        counter=counter+i
+def checkCombinationValue(splitRooms):
     #based
    # for classes in breakdown:  
+
+
+def assignStudents(studentAssignments):
+
+
+
 
 def subjectSplit(filledRooms):
      global subjectClasses
@@ -102,10 +97,11 @@ def subjectSplit(filledRooms):
      return(split)
 
 def checkLeaders(splitRooms,emptyRooms):
+    #splitRooms is list of list of rooms being used, split by subject
     search=emptyRooms[:]
     subjectCombo=[] #list of rooms by subject that can be used for leaders meetings
     finalList=[]
-    for subject in splitRooms:
+    for subject in splitRooms: #figure out which days are free for leaders to use
         days=['Sunday','Monday','Tuesday','Wednesday','Thursday'] 
         for usedRoom in subject:
             try:
