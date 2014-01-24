@@ -2,6 +2,7 @@
 #combination with replacement
 #possibleTimes is scanned in from each subject as is numberofClasses
 import itertools
+import copy
 
 def combinations(possibleTimes,numberofClasses,classData,roomCount):
     combo=[]
@@ -15,18 +16,20 @@ def combinations(possibleTimes,numberofClasses,classData,roomCount):
 #returns time slots
 
 def checkStudents(data,combination,possibleTimes):
-    temp=data
+    temp=copy.deepcopy(data)
     for i in range(len(combination)):
         index=possibleTimes.index(combination[i])
         temp=sorted(temp,key=lambda student: student.avail[index])
-        #remove the first 10 from list if 1 or 2
-        #meaning a class can be made
+        #remove the first 10 from list if 1 or 2, meaning a class can be made
         try:
             x=temp[9].avail[index]
+            y=temp[8].avail[index]
             if x==3:
                 return(0)
-            else:
+            elif y==1 or y==2:
                 del temp[0:10]
+            else:
+                return(0)
         except(IndexError):
              return(0)
     return (1)
