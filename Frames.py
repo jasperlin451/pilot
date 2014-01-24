@@ -14,6 +14,7 @@ class Page(tk.Frame):
 
 class getInfo(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
+        self.files = []
         tk.Frame.__init__(self, *args, borderwidth=20, **kwargs)
         self.height = height
         self.width = width
@@ -25,6 +26,7 @@ class getInfo(tk.Frame):
 
     def onView(self):
         self.entries = []
+        self.names = []
         y = 0
         for x in range(0, self.number):
             num = y
@@ -32,10 +34,11 @@ class getInfo(tk.Frame):
             disp = tk.Label(self, textvariable=var)
             disp.grid(column = 0, row = y)
             var.set("Class " + str(y) + " filename")
-            openFile = tk.Button(self, text = 'Open File', command=lambda var = var: self.openFileFunc(var))
-            openFile.grid(column = 1, row = y)
+            self.names.append(tk.Entry(self, width = 20))
+            self.names[x].grid(column = 1, row = y)
+            openFile = tk.Button(self, text = 'Open File', command=lambda entry = [var, y]: self.openFileFunc(entry))
+            openFile.grid(column = 2, row = y)
             y += 1
-            self.entries.append([num, var,disp, openFile])
             
         button = tk.Button(self, text=self.text, font=('Comic Sans MS', 10),
                            command=lambda: self.callback())
@@ -48,9 +51,11 @@ class getInfo(tk.Frame):
         self.onView()
         self.lift()
         
-    def openFileFunc(self, y):
-        print y
-        y.set(tkFileDialog.askopenfilename(**self.file_opt))
+    def openFileFunc(self, entry):
+        t = tkFileDialog.askopenfilename(**self.file_opt)
+        self.entries.append(t)
+        print entry[0]
+        entry[0].set(t)
         
 class getNum(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
@@ -70,23 +75,33 @@ class getNum(tk.Frame):
     def onlift(self):
         root.geometry('{}x{}'.format(self.width, self.height))
         self.lift()
+      
 
 class App(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
 
-        p1 = Page(self, 'This is page 1', height=200, width=300)
-        p2 = getNum(self, 'Next page is 2', height=400, width=300)
-        p3 = getInfo(self, 'Done', height=400, width=600)
-        p1.callback = p2.onlift
-        p2.callback = p3.onlift
-        p3.callback = p1.onlift
+        self.p1 = Page(self, 'This is page 1', height=200, width=300)
+        self.p2 = getNum(self, 'Next page is 2', height=400, width=300)
+        self.p3 = getInfo(self, 'Done', height=400, width=600)
+        self.p1.callback = self.p2.onlift
+        self.p2.callback = self.p3.onlift
+        self.p3.callback = self.leave
 
-        p1.place(x=0, y=0, relwidth=1, relheight=1)
-        p2.place(x=0, y=0, relwidth=1, relheight=1)
-        p3.place(x=0, y=0, relwidth=1, relheight=1)
+        self.p1.place(x=0, y=0, relwidth=1, relheight=1)
+        self.p2.place(x=0, y=0, relwidth=1, relheight=1)
+        self.p3.place(x=0, y=0, relwidth=1, relheight=1)
 
-        p1.onlift()
+        self.p1.onlift()
+    
+    def leave(self):
+        files = {}
+        y = 0
+        for name in self.p3.names:
+            files[name.get()] = self.p3.entries[y]
+            y += 1
+        print files
+        root.destroy()
 
 root = tk.Tk()
 app = App(root)
