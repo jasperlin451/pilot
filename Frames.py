@@ -53,7 +53,7 @@ class getInfo(tk.Frame):
         self.lift()
         
     def openFileFunc(self, entry):
-        t = tkFileDialog.askopenfilename(**self.file_opt)
+        t = filedialog.askopenfilename(**self.file_opt)
         self.entries.append(t)
         #print entry[0]
         entry[0].set(t)
