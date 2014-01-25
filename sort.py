@@ -85,14 +85,14 @@ def checkCombinationValue(splitRooms):
             index=possibleTimes.index(roomList[classrooms].time)
             studentData,studentCounter=(list(t) for t in zip(*sorted(zip(studentData,studentCounter), key=lambda student: (student[0].avail[index],student[0].pref))))
             #add the first 10 into group
-            for i in range(10):
+            for i in range(11):
                 if studentData[i].avail[index]==1:
                     score+=3
                 else:
                     score+=1
-            temp.append(studentCounter[0:10])
-            del studentCounter[0:10]
-            del studentData[0-10]
+            temp.append(studentCounter[0:11])
+            del studentCounter[0:11]
+            del studentData[0:11]
         studentAssignments.append(temp)
         subjectWaitlist.append(studentCounter)        
     return(score,studentAssignments,subjectWaitlist)    
