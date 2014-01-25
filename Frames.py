@@ -1,5 +1,6 @@
-import Tkinter as tk
-import tkFileDialog
+import tkinter as tk
+from tkinter import filedialog
+
 class Page(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
         tk.Frame.__init__(self, *args, borderwidth=20, **kwargs)
@@ -54,7 +55,7 @@ class getInfo(tk.Frame):
     def openFileFunc(self, entry):
         t = tkFileDialog.askopenfilename(**self.file_opt)
         self.entries.append(t)
-        print entry[0]
+        #print entry[0]
         entry[0].set(t)
         
 class getNum(tk.Frame):
@@ -100,7 +101,7 @@ class App(tk.Frame):
         for name in self.p3.names:
             files[name.get()] = self.p3.entries[y]
             y += 1
-        print files
+        #print files
         root.destroy()
 
 root = tk.Tk()
