@@ -4,6 +4,7 @@ import studentImport
 import leaderImport
 import importRooms
 import combinations
+import sort
 
 class Page(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
@@ -187,13 +188,20 @@ class App(tk.Frame):
         self.p4.onlift()
         
     def runCombos(self):
+        names = []
+        for i in self.p3.names:
+            names.append(i.get())
         roomList, roomCount = importRooms.scan(self.p3.roomSheet.get())
         combos = []
         y = 0
+        sizes = []
         for x in self.returns:
+            print (str(x[1]) + str(int(self.p4.entries[y].get())) + str(x[0]) + str(roomCount))
             combos.append(combinations.combinations(x[1], int(self.p4.entries[y].get()) ,x[0] ,roomCount))
+            sizes.append(int(self.p4.entries[y].get()))
             y+=1
         print (len(combos[0]))
+        finalCombo,finalAssignments,finalWaitList=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns])
         root.destroy()
         
 
