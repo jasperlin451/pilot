@@ -3,3 +3,4 @@ class Leader:
         self.name=firstname+' '+lastname
         self.subjectPreference = subjectPreference
         self.availability = availability
+        self.taken = False
