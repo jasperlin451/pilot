@@ -5,6 +5,7 @@ import leaderImport
 import importRooms
 import combinations
 import sort
+import assignEverything
 
 class Page(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
@@ -200,10 +201,13 @@ class App(tk.Frame):
             combos.append(combinations.combinations(x[1], int(self.p4.entries[y].get()) ,x[0] ,roomCount))
             sizes.append(int(self.p4.entries[y].get()))
             y+=1
-        print (len(combos[0]))
-        finalCombo,finalAssignments,finalWaitList=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns])
+        finalRoomCombo,finalStudentAssignments,finalWaitList,LeaderCombo=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns])
         root.destroy()
-        
+        leaderRooms,leaders=assign.assignLeaders(c,LeaderCombo,roomList,sizes,finalRoomCombo)
+        #assign everything
+        roomList=assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaders,names)
+        for test in roomList:
+             print(test.subject,test.time,len(test.group))
 
 root = tk.Tk()
 app = App(root)

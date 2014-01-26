@@ -19,7 +19,7 @@ def Sorter(data,timeCombinations,subject,classes,rooms,subjectTimeSlots):
     classData=data
     subjectClasses=classes
     recursiveSorter([],list(range(len(roomList))),0)
-    return(finalCombo,finalStudentAssignments,finalWaitList)
+    return(finalCombo,finalStudentAssignments,finalWaitList,finalLeaderCombo)
 
 #take time combos for each subject and apply to roomList
 
@@ -38,19 +38,11 @@ def recursiveSorter(filledRooms,remainRooms,index):
                     temp2,leaderCombos=checkLeaders(split,remain)
                     if temp2==1: #if there are leader slots that fit into combination slot
                         value=va
-                        global finalStudentAssignments,finalWaitList,finalCombo
+                        global finalStudentAssignments,finalWaitList,finalCombo,finalLeaderCombos
                         finalStudentAssignments=studentAssignments
                         finalWaitList=waitList
-                        finalCombo=[]
-                        for leaderMeetingTimes in leaderCombos:
-                            for subLeader,subjectRoomList in zip(leaderMeetingTimes,split):
-                                #add the subLeader Room to the subjectRoomList
-                                subjectRoomList.append(subLeader)
-                            #split is now the list with students and leader meeting times
-                            finalCombo.append(copy.deepcopy(split))
-                            #delete the added rooms so that the process can be done again
-                            for delete in split:
-                                del delete[-1]
+                        finalCombo=split
+                        finalLeaderCombos=leaderCombos
             else:
                 recursiveSorter(filled,remain,index+1)
 
