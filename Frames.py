@@ -7,6 +7,7 @@ import combinations
 import sort
 import assignEverything
 import time
+import pickle
 
 class Page(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
@@ -205,6 +206,8 @@ class App(tk.Frame):
             y+=1
         finalRoomCombo,finalStudentAssignments,finalWaitList,LeaderCombo=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns])
         root.destroy()
+        f = open("variables.txt", 'wb')
+        pickle.dump([c, leaderCombo, roomList, sizes, finalRoomCombo], f)
         leaderRooms,leaders=assign.assignLeaders(c,LeaderCombo,roomList,sizes,finalRoomCombo)
         #assign everything
         roomList=assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaders,names)
