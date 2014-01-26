@@ -6,6 +6,7 @@ import importRooms
 import combinations
 import sort
 import assignEverything
+import time
 
 class Page(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
@@ -189,6 +190,7 @@ class App(tk.Frame):
         self.p4.onlift()
         
     def runCombos(self):
+        starttime=time.time()
         names = []
         for i in self.p3.names:
             names.append(i.get())
@@ -207,8 +209,8 @@ class App(tk.Frame):
         #assign everything
         roomList=assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaders,names)
         for test in roomList:
-             print(test.subject,test.time,len(test.group))
-
+             print(test.subject,test.time,len(test.group),test.leader)
+        print(time.time()-starttime)
 root = tk.Tk()
 app = App(root)
 root.mainloop()
