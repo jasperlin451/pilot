@@ -171,17 +171,18 @@ class App(tk.Frame):
         self.p1.onlift()
     
     def getSizes(self):
-        files = {}
+        files = []
         y = 0
         self.returns = []
         size = []
         for name in self.p3.names:
-            files[name.get()] = self.p3.entries[y]
+            files.append([name.get(), self.p3.entries[y]])
+            #files[name.get()] = self.p3.entries[y]
             y += 1
         x = 0
         for f in files:
-            self.returns.append(studentImport.scan(files[f], f))
-            size.append([f, len(self.returns[x][0])])
+            self.returns.append(studentImport.scan(f[1], f[0]))
+            size.append([f[0], len(self.returns[x][0])])
             x+=1
         a,b,c = leaderImport.scan(self.p3.leadSheet.get())
         number = len(c)
