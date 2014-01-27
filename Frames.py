@@ -200,17 +200,18 @@ class App(tk.Frame):
         y = 0
         sizes = []
         for x in self.returns:
-            print (str(x[1]) + str(int(self.p4.entries[y].get())) + str(x[0]) + str(roomCount))
             combos.append(combinations.combinations(x[1], int(self.p4.entries[y].get()) ,x[0] ,roomCount))
             sizes.append(int(self.p4.entries[y].get()))
             y+=1
         finalRoomCombo,finalStudentAssignments,finalWaitList,LeaderCombo=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns])
         root.destroy()
-        f = open("variables.txt", 'wb')
+        f = open('variables.txt', 'wb')
         pickle.dump([c, leaderCombo, roomList, sizes, finalRoomCombo], f)
         leaderRooms,leaders=assign.assignLeaders(c,LeaderCombo,roomList,sizes,finalRoomCombo)
         #assign everything
         roomList=assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaders,names)
+        f2=open('variables2.txt','wb')
+        pickle.dump(roomList,f2)
         for test in roomList:
              print(test.subject,test.time,len(test.group),test.leader)
         print(time.time()-starttime)
