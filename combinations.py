@@ -20,14 +20,14 @@ def checkStudents(data,combination,possibleTimes):
     for i in range(len(combination)):
         index=possibleTimes.index(combination[i])
         temp=sorted(temp,key=lambda student: student.avail[index])
-        #remove the first 11 from list if 1 or 2, meaning a class can be made
+        #remove the first 10 from list if 1 or 2, meaning a class can be made
         try:
-            x=temp[10].avail[index]
-            y=temp[9].avail[index]
+            x=temp[9].avail[index]
+            y=temp[8].avail[index]
             if x==3:
                 return(0)
             elif y==1 or y==2:
-                del temp[0:11]
+                del temp[0:10]
             else:
                 return(0)
         except(IndexError):
