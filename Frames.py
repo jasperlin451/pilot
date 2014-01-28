@@ -114,6 +114,7 @@ class getClasses(tk.Frame):
         self.text = text
         self.grid()
         self.entries = []
+        self.studentsper = []
         
         for x in range(0, len(size)):
             disp = tk.Label(self, text=size[x][0])
@@ -124,6 +125,10 @@ class getClasses(tk.Frame):
             num.insert(0,"0")
             num.grid(column = 2, row = x)
             self.entries.append(num)
+            stu = tk.Entry(self)
+            stu.insert(0,"0")
+            stu.grid(column = 3, row = x)
+            self.studentsper.append(stu)
             
         update = tk.Button(self, text = "Update Totals", command=lambda:self.update())
         update.grid(column = 2, row = len(size))
@@ -140,7 +145,12 @@ class getClasses(tk.Frame):
    
     def check(self):
         self.update()
-        if (1==1): # (self.left == 0):
+        filled = True
+        for stu in self.studentsper:
+            if (int(stu.get()) == 0):
+                filled = False
+
+        if ((1==1) and filled): # (self.left == 0):
             self.callback()
      
     def update(self):
