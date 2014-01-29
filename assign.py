@@ -16,6 +16,7 @@ def assignLeaders(leaderData, timeCombos, roomList, subjectData, times):
 def attempt(combo, leaderData, roomList, subjectData, times):
     #calculate value based on leader assignment returned from recursive assigning
     x = recurse(combo, leaderData, roomList, subjectData, times,0)
+    return(x)
     
 def recurse(combo, leaderData, roomList, subjectData, times, index):
     subject = subjectData[index]

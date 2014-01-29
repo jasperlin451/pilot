@@ -220,6 +220,8 @@ class App(tk.Frame):
             combos.append(combinations.combinations(x[1], int(self.p4.entries[y].get()) ,x[0] ,roomCount,studentsper))
             sizes.append(int(self.p4.entries[y].get()))
             y+=1
+        for printer in combos:
+            print(len(printer))
         finalRoomCombo,finalStudentAssignments,LeaderCombo=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns],stu)
         f = open('variables.txt', 'wb')
         pickle.dump([finalRoomCombo,finalStudentAssignments,LeaderCombo], f)
