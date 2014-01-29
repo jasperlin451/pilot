@@ -1,25 +1,25 @@
 #timeCombinations is all the combos generated for each subject
 #subject is the list of subject with same index as timeCombinations
 #roomList should initially be empty list that is scanned from excel
-import copy
 import itertools
 import collections
 import room
 
 finalStudentAssignments=[]
-finalWaitList=[]
+finalLeaderCombo=[]
 finalCombo=[]
 value=0
-def Sorter(data,timeCombinations,subject,classes,rooms,subjectTimeSlots):
-    global timeCombos,subjects,classData,subjectClasses,roomList,timeSlots
+def Sorter(data,timeCombinations,subject,classes,rooms,subjectTimeSlots,per):
+    global timeCombos,subjects,classData,subjectClasses,roomList,timeSlots,studentsper
     timeSlots=subjectTimeSlots
     roomList=rooms
     timeCombos=timeCombinations
     subjects=subject
     classData=data
     subjectClasses=classes
+    studentsper=per
     recursiveSorter([],list(range(len(roomList))),0)
-    return(finalCombo,finalStudentAssignments,finalWaitList,finalLeaderCombos)
+    return(finalCombo, finalStudentAssignments, finalLeaderCombo)
 
 #take time combos for each subject and apply to roomList
 
@@ -33,16 +33,16 @@ def recursiveSorter(filledRooms,remainRooms,index):
                 split=subjectSplit(filled) #split the rooms by subject 
                 #check to see if the value of new combination is greater than previous combination
                 global value
-                va,studentAssignments,waitList=checkCombinationValue(split)
+                va,studentAssignments=checkCombinationValue(split)
                 if va>value: #the combination we found improves it 
                     temp2,leaderCombos=checkLeaders(split,remain)
                     if temp2==1: #if there are leader slots that fit into combination slot
                         value=va
-                        global finalStudentAssignments,finalWaitList,finalCombo,finalLeaderCombos
+                        print(value)
+                        global finalStudentAssignments,finalCombo,finalLeaderCombo
                         finalStudentAssignments=studentAssignments
-                        finalWaitList=waitList
                         finalCombo=split
-                        finalLeaderCombos=leaderCombos
+                        finalLeaderCombo=leaderCombos
             else:
                 recursiveSorter(filled,remain,index+1)
 
@@ -65,29 +65,31 @@ def checkCombination(b,a,combination,subject):
 
 #calculate if the room combination is favorable,first preference=+3,can make=+1
 def checkCombinationValue(splitRooms):
-    studentAssignments=[] #list of lists of lists (subject, rooms, people)
+    studentAssignments=[] #list of lists of lists (subject, rooms, people)i
+    subjectAssignments=[]
     subjectWaitlist=[]
     score=0
-    global classData,roomList, timeSlots
-    data=copy.deepcopy(classData)
-    for subject,studentData,possibleTimes in zip(splitRooms,data,timeSlots):
+    global classData,roomList, timeSlots,studentsper
+    for subject,studentData,possibleTimes,classSize in zip(splitRooms,classData,timeSlots,studentsper): #each subject
         studentCounter=list(range(len(studentData)))
-        temp=[]
-        for classrooms in subject:
+        for classrooms in subject: #each room
+            temp=[]
             index=possibleTimes.index(roomList[classrooms].time)
-            studentData,studentCounter=(list(t) for t in zip(*sorted(zip(studentData,studentCounter), key=lambda student: (student[0].avail[index],student[0].pref))))
-            #add the first 11 into group
-            for i in range(10):
-                if studentData[i].avail[index]==1:
-                    score+=3
-                else:
-                    score+=1
-            temp.append(studentCounter[0:10])
-            del studentCounter[0:10]
-            del studentData[0:10]
-        studentAssignments.append(temp)
-        subjectWaitlist.append(studentCounter)        
-    return(score,studentAssignments,subjectWaitlist)    
+            studentData,studentCounter=(list(t) for t in zip(*sorted(zip(studentData,studentCounter),key=lambda student: (student[0].avail[index],student[0].pref))))
+            for students,indexer in zip(studentData,studentCounter):
+                if len(temp)<=classSize:
+                    if students.avail[index]<3 and students.taken==False:
+                        students.taken=True
+                        score+=2/students.avail[index] #two points for 1st, 1 point for 2nd
+                        temp.append(indexer)
+            if len(temp)==classSize:
+                subjectAssignments.append(temp)
+        studentAssignments.append(subjectAssignments)
+        #reset classData
+        for reset in studentData:
+            reset.taken=False
+        
+    return(score,studentAssignments)    
 
 def subjectSplit(filledRooms):
      global subjectClasses

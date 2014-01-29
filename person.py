@@ -6,3 +6,4 @@ class Person:
 		self.sub=subject
 		self.avail=availability
 		self.pref=preference
+		self.taken=False

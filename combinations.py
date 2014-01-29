@@ -4,10 +4,10 @@
 import itertools
 import copy
 
-def combinations(possibleTimes,numberofClasses,classData,roomCount):
+def combinations(possibleTimes,numberofClasses,classData,roomCount,classSize):
     combo=[]
     for a in itertools.combinations_with_replacement(possibleTimes,numberofClasses):
-        b=checkStudents(classData,a,possibleTimes)
+        b=checkStudents(classData,a,possibleTimes,classSize)
         c=checkRooms(a,roomCount)
         if b==1 and c==1:
             combo.append(a)
@@ -15,23 +15,23 @@ def combinations(possibleTimes,numberofClasses,classData,roomCount):
 
 #returns time slots
 
-def checkStudents(data,combination,possibleTimes):
-    temp=copy.deepcopy(data)
-    for i in range(len(combination)):
-        index=possibleTimes.index(combination[i])
-        temp=sorted(temp,key=lambda student: student.avail[index])
-        #remove the first 10 from list if 1 or 2, meaning a class can be made
-        try:
-            x=temp[9].avail[index]
-            y=temp[8].avail[index]
-            if x==3:
-                return(0)
-            elif y==1 or y==2:
-                del temp[0:10]
-            else:
-                return(0)
-        except(IndexError):
-             return(0)
+def checkStudents(data,combination,possibleTimes,classSize):
+    for i in combination: #each room
+        index=possibleTimes.index(i)
+        count=0
+        for student in data:
+            if count<classSize: #number of students in a class
+                if student.avail[index]<3 and student.taken==False:
+                    student.taken=True
+                    count+=1
+        blah=0
+        if count !=classSize:#class was too small
+            for reset in data:
+                reset.taken=False
+            return(0)
+    #all the combinations worked,reset
+    for students in data:
+        students.taken=False
     return (1)
 
 #check to see if the combination is possible based on number of rooms available

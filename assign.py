@@ -30,7 +30,7 @@ def recurse(combo, leaderData, roomList, subjectData, times, index):
             leads.append(leader)
             leader.taken == True
     if (index == len(subjectData) - 1):         #Base Case
-        combo, value = checkCombos(leads, subject, classTimes, roomlist, index)    
+        combo, value = checkCombos(leads, subject, classTimes, roomList, index)    
         if combo is None:
             return 0, None
         else:
