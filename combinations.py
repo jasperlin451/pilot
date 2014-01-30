@@ -22,7 +22,7 @@ def checkStudents(data,combination,possibleTimes,classSize):
         count=0
         for student in data:
             if count<classSize: #number of students in a class
-                if student.avail[index]<3 and student.taken==False:
+                if int(student.avail[index])<3 and student.taken==False:
                     student.taken=True
                     count+=1
                     value=value+2/student.avail[index]
@@ -34,14 +34,17 @@ def checkStudents(data,combination,possibleTimes,classSize):
     #all the combinations worked,reset
     for students in data:
         students.taken=False
-    if len(combination)>=10:
-        if value<(classSize*len(combination)*1.95):
+    if len(data)>100:
+        if value<(classSize*len(combination)*1.9):
             return (0)
-    elif len(combination)>5:
-        if value<(classSize*len(combination)*1.8):
+    elif len(data)>80:
+        if value<(classSize*len(combination)*1.75):
+            return(0)
+    elif len(data)>50:
+        if value<(classSize*len(combination)*1.65):
             return(0)
     else:
-        if value<(classSize*len(combination)*1.5):
+        if value<(classSize*len(combination)*1.6):
             return(0)
     return(1)
 
