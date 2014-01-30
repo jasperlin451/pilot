@@ -30,7 +30,7 @@ class getInfo(tk.Frame):
         self.grid()
         self.text = text
         self.file_opt = options = {}
-        options['filetypes'] = [('all files','.*'), ('text files', '.txt')]
+        options['filetypes'] = [('all files','.*'), ('text files', '.txt'), ('excel files', '.xls*')]
         options['initialdir'] = '.'
 
     def onView(self):
