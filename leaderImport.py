@@ -18,11 +18,11 @@ def scan(filename):
             else:
                 if sheet.cell_value(curr_row,i+2)==1:
                     available.append(sheet.cell_value(0,i+2))
-        for j in range(num_cells-timeslots):
+        for j in range(num_cells-timeslots-2):
             if curr_row<1:
-                subjects.append(sheet.cell_value(0,j+timeslots))
+                subjects.append(sheet.cell_value(0,j+timeslots+2))
             else:
-                subjectPreference.append(sheet.cell_value(curr_row,j+timeslots))
+                subjectPreference.append(int(sheet.cell_value(curr_row,j+timeslots+2)))
         if curr_row !=0:
             first=sheet.cell_value(curr_row,0)
             last=sheet.cell_value(curr_row,1)

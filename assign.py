@@ -16,6 +16,7 @@ def assignLeaders(leaderData, timeCombos, roomList, subjectData, times):
 def attempt(combo, leaderData, roomList, subjectData, times):
     #calculate value based on leader assignment returned from recursive assigning
     x = recurse(combo, leaderData, roomList, subjectData, times,0)
+    return(x)
     
 def recurse(combo, leaderData, roomList, subjectData, times, index):
     subject = subjectData[index]
@@ -30,7 +31,7 @@ def recurse(combo, leaderData, roomList, subjectData, times, index):
             leads.append(leader)
             leader.taken == True
     if (index == len(subjectData) - 1):         #Base Case
-        combo, value = checkCombos(leads, subject, classTimes, roomlist, index)    
+        combo, value = checkCombos(leads, subject, classTimes, roomList, index)    
         if combo is None:
             return 0, None
         else:
