@@ -26,6 +26,7 @@ def recurse(combo, leaderData, roomList, subjectData, times, index):
     value = 0
     max = 0
     best = []
+    leaderData=sorted(leaderData, key=lambda leader: leader.subjectPreference[index])
     for leader in leaderData:
         if (leadTime in leader.availability) and (leader.subjectPreference[index] < 3) and (leader.taken is False):
             leads.append(leader)

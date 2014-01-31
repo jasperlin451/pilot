@@ -4,6 +4,7 @@
 import itertools
 import collections
 import room
+import pickle
 
 finalStudentAssignments=[]
 finalLeaderCombo=[]
@@ -31,6 +32,9 @@ def recursiveSorter(filledRooms,remainRooms,index):
             temp1,filled,remain=checkCombination(filledRooms,remainRooms,combo,subjects[index])
             if temp1==1:
                 if index==len(timeCombos)-1: #if the last subject combination works
+                    print('here')
+                    f=open('variables3.txt','wb')
+                    pickle.dump(filled,f)
                     split=subjectSplit(filled) #split the rooms by subject 
                     #check to see if the value of new combination is greater than previous combination
                     studentAssignments=checkCombinationValue(split)
