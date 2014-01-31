@@ -93,13 +93,16 @@ class getNum(tk.Frame):
         self.height = height
         self.width = width
         self.grid()
-	    
+        
+        x = tk.Label(self, text = "Number of Classes")
+        x.grid(column = 1, row = 0)        
+        
         classNum = tk.Entry(self)
         classNum.insert(0, "0")
 	    
-        classNum.grid(column=1, row=0)
+        classNum.grid(column=1, row=1)
         button = tk.Button(self, text=text, font=('Comic Sans MS', 10), command=lambda: self.callback(classNum.get()))
-        button.grid(column=1, row = 1)   
+        button.grid(column=1, row = 2)   
         
     def onlift(self):
         root.geometry('{}x{}'.format(self.width, self.height))
@@ -117,32 +120,41 @@ class getClasses(tk.Frame):
         self.entries = []
         self.studentsper = []
         
+        a = tk.Label(self, text = "Students in Class")
+        a.grid(column = 1, row = 0)
+        
+        b = tk.Label(self, text = "Leaders for Class")
+        b.grid(column = 2, row = 0)
+        
+        c = tk.Label(self, text = "Students per Section")
+        c.grid(column = 3, row = 0)
+        
         for x in range(0, len(size)):
             disp = tk.Label(self, text=size[x][0])
-            disp.grid(column = 0, row = x)
+            disp.grid(column = 0, row = x+1)
             disp2 = tk.Label(self, text=size[x][1])
-            disp2.grid(column = 1, row = x)
+            disp2.grid(column = 1, row = x+1)
             num = tk.Entry(self)
             num.insert(0,"0")
-            num.grid(column = 2, row = x)
+            num.grid(column = 2, row = x+1)
             self.entries.append(num)
             stu = tk.Entry(self)
             stu.insert(0,"0")
-            stu.grid(column = 3, row = x)
+            stu.grid(column = 3, row = x+1)
             self.studentsper.append(stu)
             
         update = tk.Button(self, text = "Update Totals", command=lambda:self.update())
-        update.grid(column = 2, row = len(size))
+        update.grid(column = 2, row = len(size) + 1)
         total = tk.Label(self, text="Total Number of Leaders: " + str(self.number))
-        total.grid(column = 1, row = len(size)+1)
+        total.grid(column = 1, row = len(size)+2)
         self.remaining = tk.StringVar()
         self.remainingleads = tk.Label(self, textvariable=self.remaining)
-        self.remainingleads.grid(column = 2, row = len(size)+1)
+        self.remainingleads.grid(column = 2, row = len(size)+2)
         self.remaining.set("Leaders Remaining: " + str(number))
         
         button = tk.Button(self, text=self.text, font=('Comic Sans MS', 10),
                            command=lambda: self.check())
-        button.grid(column=1, row = self.number+2)
+        button.grid(column=1, row = self.number+3)
    
     def check(self):
         self.update()
