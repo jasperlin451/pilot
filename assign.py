@@ -8,10 +8,10 @@ def assignLeaders(leaderData, timeCombos, roomList, subjectData, times):
     best2 = None
     for combo in timeCombos:
         worked = attempt(combo, leaderData, roomList, subjectData, times)
-        if worked[0] > max:
+        if worked[0] not 0:
             best = combo
             best2 = worked[1]
-    return best, best2
+            return best, best2
     
 def attempt(combo, leaderData, roomList, subjectData, times):
     #calculate value based on leader assignment returned from recursive assigning
@@ -30,34 +30,25 @@ def recurse(combo, leaderData, roomList, subjectData, times, index):
     for leader in leaderData:
         if (leadTime in leader.availability) and (leader.subjectPreference[index] < 3) and (leader.taken is False):
             leads.append(leader)
-            leader.taken == True
     if (index == len(subjectData) - 1):         #Base Case
         combo, value = checkCombos(leads, subject, classTimes, roomList, index)    
         if combo is None:
-            for lead in leads:
-                leader.taken = False
             return 0, None
         else:
             temp = []
             temp.append(combo)
+            for lead in combo:
+                lead.taken=True
             return value, temp
-        
-    possibles = combinations(leads, subject)
-    for possible in possibles:
-        combo = checkCombos(possible, subject, classTimes, roomList, index)
-        if not (combo[0] is None):
-            value = combo[1]
-            afterValue, leaderList = recurse(combo, leaderData, roomList, subjectData, times, index+1)
-            if not (afterValue is 0):
-                if (index is 0):
-                    if (value + afterValue) > max:
-                        best = leaderList.insert(0, combo[1])
-                else:
-                    return value + afterValue, leaderList.insert(0, combo[1])
-    
-    if (index is 0):
-        return max, best
-    else:
+    else:  
+        possibles = combinations(leads, subject)
+        for possible in possibles:
+            combo = checkCombos(possible, subject, classTimes, roomList, index)
+	    if not (combo[0] is None):
+		value = combo[1]
+		afterValue, leaderList = recurse(combo, leaderData, roomList, subjectData, times, index+1)
+                if not (afterValue is 0):
+                    return value + afterValue, leaderList.insert(0, combo[0]) 
         return 0, None
         
 def checkCombos(leads, subject, classTimes, roomList, index):
@@ -73,7 +64,7 @@ def checkCombos(leads, subject, classTimes, roomList, index):
                     value +=3
                 else:
                     value +=1
-        if w is True:
+        if w is True and value>subject*2:
             return perm, value
             
     return None, 0
