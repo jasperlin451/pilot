@@ -234,17 +234,20 @@ class App(tk.Frame):
             y+=1
         for printer in combos:
             print(len(printer))
-        finalRoomCombo,finalStudentAssignments,LeaderCombo=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns],stu)
+        finalRoomCombo,finalStudentAssignments,LeaderDays=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns],stu)
         f = open('variables.txt', 'wb')
-        pickle.dump([finalRoomCombo,finalStudentAssignments,LeaderCombo], f)
+        pickle.dump([LeaderDays, finalRoomCombo,finalStudentAssignments], f)
         print(time.time()-starttime)
-        leaderRooms,leaders=assign.assignLeaders(self.leaderData,LeaderCombo,roomList,sizes,finalRoomCombo)
-        #assign everything
-        roomList=assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaders,names)
+        #assign the rooms
+        for subj,subject in zip(finalRoomCombo,names):
+            for group in subj:
+                roomList[group].taken=True
+        leaderAssignments,leaderRooms=assign.assignLeaders(self.leaderData,LeaderDays,roomList,sizes,finalRoomCombo)
+        print(time.time()-starttime)
         f2=open('variables2.txt','wb')
-        pickle.dump(roomList,f2)
-        for test in roomList:
-             print(test.subject,test.time,len(test.group),test.leader)
+        pickle.dump([roomList,leaderAssignments,leaderRooms])
+        #assign everything
+        assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaderAssignments,names)
 root = tk.Tk()
 app = App(root)
 root.mainloop()

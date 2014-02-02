@@ -3,7 +3,6 @@ class Person:
 		self.jhu=jhed
 		self.name=firstname+' '+lastname
 		self.mail=email
-		self.sub=subject
 		self.avail=availability
 		self.pref=preference
 		self.taken=False

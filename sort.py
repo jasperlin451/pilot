@@ -4,7 +4,6 @@
 import itertools
 import collections
 import room
-import pickle
 
 finalStudentAssignments=[]
 finalLeaderCombo=[]
@@ -32,14 +31,13 @@ def recursiveSorter(filledRooms,remainRooms,index):
             temp1,filled,remain=checkCombination(filledRooms,remainRooms,combo,subjects[index])
             if temp1==1:
                 if index==len(timeCombos)-1: #if the last subject combination works
-                    print('here')
-                    f=open('variables3.txt','wb')
-                    pickle.dump(filled,f)
+                    print(len(filled))
+                    print('test')
                     split=subjectSplit(filled) #split the rooms by subject 
                     #check to see if the value of new combination is greater than previous combination
-                    studentAssignments=checkCombinationValue(split)
                     temp2,leaderCombos=checkLeaders(split,remain)
                     if temp2==1: #if there are leader slots that fit into combination slot
+                        studentAssignments=checkCombinationValue(split)
                         global finalStudentAssignments,finalCombo,finalLeaderCombo
                         finalStudentAssignments=studentAssignments
                         finalCombo=split
@@ -113,31 +111,13 @@ def checkLeaders(splitRooms,emptyRooms):
             try:
                 global roomList
                 temp=roomList[usedRoom].time
-                days.remove(temp.split(' ',4)[0])
+                days.remove(temp.split(' ',3)[0])
             except(ValueError): #day has already been removed
                 pass
             if len(days)==0:
                 #combination uses all the days of the week, leaders can't be assigned
                 return(0,[])
-        possibleDays=days[:]
-        possibleRoom=[]
-        for day in possibleDays: #possible meeting days
-            for room in search: #go through each possible room
-                if day==roomList[room].time.split(' ',4)[0]: #if the remaining room matches day 
-                    possibleRoom.append(room) 
-        subjectCombo.append(possibleRoom) #final result is leader times for subject 
-    #make combinations from remaining rooms 
-    for combo in itertools.product(*subjectCombo):
-        #check for overlapping rooms
-        count=collections.Counter(combo)
-        failed=0
-        for i in count:
-            if count[i]!=1: #combination is overlapping, wont work
-                #skip this particular combination
-                failed=1
-                break
-        if failed==0:
-            finalList.append(combo) 
+        finalList.append(days)
     return(1,finalList)
 
 
