@@ -1,12 +1,23 @@
-def assign(roomList,studentData,finalRoomCombo,finalStudentAssignments,leaderRooms,leaders,subjects):
-    for i,j,k,l,m in zip(finalRoomCombo,finalStudentAssignments,subjects,leaders,studentData): #iterate by subject
-        for a,b,c in zip(i,j,l):
-            roomList[a].group=[m[d] for d in b]
-            roomList[a].leader=c
-            roomList[a].subject=k
+#Output format
+#Group #, Day, Time, Room
+#Pilot leader
+#First Last, JHED ID, Hopkins ID, email
 
-    for z,y,w in zip(leaderRoooms,leaders,subjects):
-        roomList[z].leaderMeeting=1
-        roomList[z].group=y
-        roomList[z].subject=w
-    return(roomList)
+def assign(roomList,studentData,finalRoomCombo,finalStudentAssignments,leaderRooms,leaderAssignments,subjectNames):
+    for subjectRooms,subjectAssignments,subjectName,subjectLeaders,subjectData,leaderMeeting in zip(finalRoomCombo,finalStudentAssignments,subjectNames,leaderAssignments,studentData,leaderRooms): #iterate by subject
+        f=open(subjectName+'.txt','w')
+        #print class data
+        counter=1
+        for room,classAssignments,leader in zip(subjectRooms,subjectAssignments,subjectLeaders):
+            f.write('Group '+str(counter)+', '+roomList[room].time+', '+roomList[room].classroom)
+            f.write(leader.name) #PILOT leader
+            for student in classAssignments:
+                f.write(subjectData[student].name+', '+subjectData[student].jhu+', '+subjectData[student].email)
+            f.write('\n')
+            counter=counter+1
+        #print leader data
+        f.write('Leaders')
+        f.write(leaderMeeting.classroom)
+        for x in subjectLeaders:
+            f.write(x.name)
+        f.close()

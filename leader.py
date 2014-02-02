@@ -3,4 +3,5 @@ class Leader:
         self.name=firstname+' '+lastname
         self.subjectPreference = subjectPreference
         self.availability = availability
+        self.total=sum(subjectPreference)
         self.taken = False

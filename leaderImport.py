@@ -18,6 +18,8 @@ def scan(filename):
             else:
                 if sheet.cell_value(curr_row,i+2)==1:
                     available.append(sheet.cell_value(0,i+2))
+                else:
+                    available.append(' ')
         for j in range(num_cells-timeslots-2):
             if curr_row<1:
                 subjects.append(sheet.cell_value(0,j+timeslots+2))

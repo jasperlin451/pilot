@@ -35,7 +35,7 @@ def checkStudents(data,combination,possibleTimes,classSize):
     for students in data:
         students.taken=False
     if len(data)>100:
-        if value<(classSize*len(combination)*1.9):
+        if value<(classSize*len(combination)*1.85):
             return (0)
     elif len(data)>80:
         if value<(classSize*len(combination)*1.75):
@@ -44,7 +44,7 @@ def checkStudents(data,combination,possibleTimes,classSize):
         if value<(classSize*len(combination)*1.65):
             return(0)
     else:
-        if value<(classSize*len(combination)*1.6):
+        if value<(classSize*len(combination)*1.55):
             return(0)
     return(1)
 
@@ -56,6 +56,6 @@ def checkRooms(combo,roomCount):
     for b in comboTimes:
         comboRooms.append(combo.count(b))
     for i in range(len(comboTimes)): #check to see if combo rooms more than available rooms
-        if roomCount[1][roomCount[0].index(comboTimes[i])]<comboRooms[i]:
+        if roomCount[1][roomCount[0].index(comboTimes[i])]*.5<comboRooms[i]:
             return(0)
     return(1)

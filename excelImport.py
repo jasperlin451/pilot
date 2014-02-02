@@ -6,7 +6,7 @@
 def scan(name):
 	import xlrd
 	workbook=xlrd.open_workbook(name)
-	sheet=workbook.sheet_by_name('Sheet1')
+	sheet=workbook.sheet_by_name(workbook.sheet_names()[0])
 	num_rows=sheet.nrows
 	num_cells=sheet.ncols
 	data=[[] for i in range(num_cells-1)]
