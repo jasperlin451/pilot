@@ -31,8 +31,6 @@ def recursiveSorter(filledRooms,remainRooms,index):
             temp1,filled,remain=checkCombination(filledRooms,remainRooms,combo,subjects[index])
             if temp1==1:
                 if index==len(timeCombos)-1: #if the last subject combination works
-                    print(len(filled))
-                    print('test')
                     split=subjectSplit(filled) #split the rooms by subject 
                     #check to see if the value of new combination is greater than previous combination
                     temp2,leaderCombos=checkLeaders(split,remain)
@@ -69,25 +67,22 @@ def checkCombination(b,a,combination,subject):
 #calculate if the room combination is favorable,first preference=+3,can make=+1
 def checkCombinationValue(splitRooms):
     studentAssignments=[] #list of lists of lists (subject, rooms, people)i
-    subjectAssignments=[]
     global classData,roomList, timeSlots,studentsper
     for subject,studentData,possibleTimes,classSize in zip(splitRooms,classData,timeSlots,studentsper): #each subject
-        studentCounter=list(range(len(studentData)))
+        subjectAssignments=[]
         for classrooms in subject: #each room
             temp=[]
             index=possibleTimes.index(roomList[classrooms].time)
-            for students,indexer in sorted(zip(studentData,studentCounter),key=lambda student: (student[0].avail[index],student[0].pref)):
+            studentData=sorted(studentData,key=lambda student: (student.pref, student.avail[index]))
+            for students in studentData:
                 if len(temp)<classSize:
                     if int(students.avail[index])<3 and students.taken==False:
                         students.taken=True
-                        temp.append(indexer)
-                else:
+                        temp.append(students)
+                if len(temp)==classSize:
+                    subjectAssignments.append(temp)
                     break
-            subjectAssignments.append(temp)
         studentAssignments.append(subjectAssignments)
-        #reset classData
-        for reset in studentData:
-            reset.taken=False
         
     return(studentAssignments)    
 

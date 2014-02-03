@@ -2,7 +2,7 @@
 def scan(name,subject):
     import xlrd, person
     workbook = xlrd.open_workbook(name)
-    sheet = workbook.sheet_by_name('Sheet1')
+    sheet = workbook.sheet_by_name('Sheet 1')
     num_rows = sheet.nrows
     num_cells = sheet.ncols
     data = []

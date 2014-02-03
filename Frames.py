@@ -8,7 +8,7 @@ import sort
 import assign
 import assignEverything
 import time
-import pickle
+import pickle  
 
 class Page(tk.Frame):
     def __init__(self, master, text, height, width, *args, **kwargs):
@@ -235,19 +235,21 @@ class App(tk.Frame):
         for printer in combos:
             print(len(printer))
         finalRoomCombo,finalStudentAssignments,LeaderDays=sort.Sorter([m[0] for m in self.returns],combos,names,sizes,roomList,[n[1] for n in self.returns],stu)
-        f = open('variables.txt', 'wb')
-        pickle.dump([LeaderDays, finalRoomCombo,finalStudentAssignments], f)
         print(time.time()-starttime)
         #assign the rooms
         for subj,subject in zip(finalRoomCombo,names):
             for group in subj:
                 roomList[group].taken=True
         leaderAssignments,leaderRooms=assign.assignLeaders(self.leaderData,LeaderDays,roomList,sizes,finalRoomCombo)
-        print(time.time()-starttime)
-        f2=open('variables2.txt','wb')
-        pickle.dump([roomList,leaderAssignments,leaderRooms])
+        #print(time.time()-starttime)
+        #f2=open('variables2.txt','wb')
+        #pickle.dump([roomList,leaderAssignments,leaderRooms])
         #assign everything
-        assignEverything.assign(roomList,self.returns,finalRoomCombo,finalStudentAssignments,leaderRooms,leaderAssignments,names)
+        data=[]
+        for n in self.returns:
+            data.append(n)
+        assignEverything.assign(roomList,finalRoomCombo,finalStudentAssignments,leaderRooms,leaderAssignments,names)
+        #assignEverything.assign2(roomList,finalRoomCombo,finalStudentAssignments,names)
 root = tk.Tk()
 app = App(root)
 root.mainloop()

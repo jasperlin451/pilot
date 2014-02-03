@@ -18,7 +18,7 @@ def checkStudents(data,combination,possibleTimes,classSize):
     value=0
     for i in combination: #each room
         index=possibleTimes.index(i)
-        data=sorted(data, key=lambda student: student.avail[index])
+        data=sorted(data, key=lambda student: (student.pref,student.avail[index]))
         count=0
         for student in data:
             if count<classSize: #number of students in a class
@@ -26,7 +26,6 @@ def checkStudents(data,combination,possibleTimes,classSize):
                     student.taken=True
                     count+=1
                     value=value+2/student.avail[index]
-        blah=0
         if count !=classSize:#class was too small
             for reset in data:
                 reset.taken=False
@@ -35,16 +34,16 @@ def checkStudents(data,combination,possibleTimes,classSize):
     for students in data:
         students.taken=False
     if len(data)>100:
-        if value<(classSize*len(combination)*1.85):
+        if value<(classSize*len(combination)*1.8):
             return (0)
     elif len(data)>80:
-        if value<(classSize*len(combination)*1.75):
+        if value<(classSize*len(combination)*1.7):
             return(0)
     elif len(data)>50:
-        if value<(classSize*len(combination)*1.65):
+        if value<(classSize*len(combination)*1.6):
             return(0)
     else:
-        if value<(classSize*len(combination)*1.55):
+        if value<(classSize*len(combination)*1.5):
             return(0)
     return(1)
 

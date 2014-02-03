@@ -9,7 +9,9 @@ def assignLeaders(leaderData, leaderDays, roomList, subjectData, times):
     
 def recurse(leaderDays, leaderData, roomList, subjectData, times, index):
     subject = subjectData[index]
-    classTimes = times[index]
+    classTimes=[]
+    for blah in times[index]:
+        classTimes.append(roomList[blah].time)
     days=leaderDays[index]
     leads = []
     value = 0
@@ -23,22 +25,26 @@ def recurse(leaderDays, leaderData, roomList, subjectData, times, index):
             possibleTimes.append(checkRoom.time)
             possibleRooms.append(checkRoom)
     #sort by those times
-    for time,leadRoom in zip(possibleTimes,possibleRoom):
-        leaderData=sorted(leaderData, key=lambda leader: leader.total, reverse=True)
-        indexer=leader.availibility.index(time)
-        leaderData=sorted(leaderData, key=lambda leader: leader.availability[indexer], reverse=True)
-        leaderData=sorted(leaderData, key=lambda leader: leader.subjectPreference[index])
+    for time,leadRoom in zip(possibleTimes,possibleRooms):
+        #find index
+        for i in leaderData:
+            if time in i.availability:
+                indexer=i.availability.index(time)
+                break
+
+        leaderData=sorted(leaderData, key=lambda key: key.subjectPreference[index])
         for leader in leaderData:
             if  (leader.subjectPreference[index] < 3) and (leader.taken is False) and (time in leader.availability):
                 leads.append(leader) #potential leaders
         if len(leads)<subject: #not enough leaders
             return 0, None, None
         if (index == len(subjectData) - 1):         #Base Case
-            combo, value = checkCombos(leads, subject, classTimes, roomList, index)    
-            if combo is None:
-                return 0, None, None
-            else:
-                return value, combo, leadRoom
+            possibles=combinations(leads,subject)
+            for possible in possibles:
+                combo, value = checkCombos(possible, subject, classTimes, roomList, index)
+                if not (combo is None):
+                    return value, combo, leadRoom    
+            return value, combo, leadRoom
         #else:
         possibles = combinations(leads, subject)
         for possible in possibles:
@@ -57,45 +63,43 @@ def recurse(leaderDays, leaderData, roomList, subjectData, times, index):
     return 0, None, None
         
 def checkCombos(leads, subject, classTimes, roomList, index):
-    temp=[[None]]*len(classTimes)
-    for a in leads:
-        for i,d in zip(classTimes,temp):
-            if i in a.availability:
-                d.append(a)
+    temp=[]
+    for b in classTimes:
+        temp1=[]
+        for a in leads:
+            if b in a.availability:
+                temp1.append(a)
+        temp.append(temp1)
     #assign the classTimes with the least leader availability first
-    sortedTimes = []
-    i = 0
-    for time in temp:
-        if len(sortedTimes) is 0:
-            sortedTimes.append(i)
-        else:
-            x = 0
-            while(len(time) < len(temp[x])):
-                x+=1
-            sortedTimes.insert(x, i)
+    sortedindex = []
+    for i in temp:
+        sortedindex.append(len(i))
+    counter=list(range(len(sortedindex)))
+    a,b=(list(t) for t in zip(*sorted(zip(sortedindex,counter))))
+    sortedRooms=[]
+    for index in b:
+        sortedRooms.append(temp[index])
     finalCombo = []
-    for time in sortedTimes:
-        currentLead = getLeast(classTimes, time) #write later
+    for leaders in sortedRooms:
+        currentLead = getLeast(classTimes, leaders) #write later
         if currentLead is None:
-            print ("noooooooooooooooooooooooooooooooo")
             return None, 0
             #Then it didn't work. Recurse?
         currentLead.taken = True
         finalCombo.append(currentLead)
     return finalCombo, 10
 
-def getLeast(classTimes, time):
-    min = 10000
+def getLeast(classTimes, leaders):
+    mini = 10000
     least = None
-    for lead in time:
-        if not lead.taken:
+    for lead in leaders:
+        if lead.taken==False:
             y = 0
             for t in lead.availability:
                 if t in classTimes:
                     y+=1
-            if y<min:
+            if y<mini:
                 least = lead
-                
     return least
 
 '''for c in range(len(classTimes)):
@@ -123,30 +127,5 @@ perms = permutations(leads, subject)
             
     return None, 0
 '''
-#def checkDays(leaderDays,leaderCombo,roomList):
-#    temp=[]
-#    availRooms=[]
-#    availTimes=[]
-#    for rooms in roomList:
-#        if rooms.taken==False:
-#            availRooms.append(rooms)
-#            availTimes.append(rooms.time)
-#    for leader in leaderCombo:
-#        for avail in leader.availability:
-#            if avail.split(' ',3)[0] in leaderDays:
-#                temp.append(avail)
-#    a=Counter(temp).most_common()
-#    for x in a:
-#        if (x[0]==len(leaderCombo)): #all leaders free at this time
-#            for w,z in zip(availRooms,availTimes):
-#                if x[1]==z:
-#                    w.taken=True
-#                    return(1,w)
-#    return(0,[])  
-    
-
-
-
-
 
     

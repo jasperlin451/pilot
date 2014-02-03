@@ -7,7 +7,7 @@ def scan(filename):
     data = []
     times = []
     subjects=[]
-    timeslots=24 #can be changed
+    timeslots=26 #can be changed
     for curr_row in range(num_rows):
         available=[]
         subjectPreference=[]
