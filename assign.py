@@ -31,7 +31,7 @@ def recurse(leaderDays, leaderData, roomList, subjectData, times, index):
             if time in i.availability:
                 indexer=i.availability.index(time)
                 break
-
+        leaderData=sorted(leaderData, key=lambda key: key.total, reverse=True)
         leaderData=sorted(leaderData, key=lambda key: key.subjectPreference[index])
         for leader in leaderData:
             if  (leader.subjectPreference[index] < 3) and (leader.taken is False) and (time in leader.availability):
@@ -74,19 +74,31 @@ def checkCombos(leads, subject, classTimes, roomList, index):
     sortedindex = []
     for i in temp:
         sortedindex.append(len(i))
-    counter=list(range(len(sortedindex)))
-    a,b=(list(t) for t in zip(*sorted(zip(sortedindex,counter))))
     sortedRooms=[]
-    for index in b:
-        sortedRooms.append(temp[index])
+    for n in zip(sortedindex,temp):
+        sortedRooms.append(n)
+    sortedRooms=sorted(sortedRooms, key=lambda test:test[0])
     finalCombo = []
-    for leaders in sortedRooms:
-        currentLead = getLeast(classTimes, leaders) #write later
+    for count in range(len(classTimes)):
+        currentLead = getLeast(classTimes, sortedRooms[0][1]) 
         if currentLead is None:
             return None, 0
-            #Then it didn't work. Recurse?
         currentLead.taken = True
         finalCombo.append(currentLead)
+        #update sortedRooms, removing first index, and then recount and resort
+        del sortedRooms[0]
+        length=[]
+        for z in sortedRooms:
+            count=0
+            for leading in z[1]:
+                if leading.taken==False:
+                    count=count+1
+            length.append(count)
+        temp2=[]
+        for p in zip(length,sortedRooms):
+            temp2.append(p[1])
+        sortedRooms=sorted(temp2, key=lambda test: test[0])
+
     return finalCombo, 10
 
 def getLeast(classTimes, leaders):
